@@ -2,6 +2,7 @@ package controller;
 
 import java.util.Scanner;
 
+import model.logic.Comparendo;
 import model.logic.Modelo;
 import view.View;
 
@@ -9,10 +10,10 @@ public class Controller {
 
 	/* Instancia del Modelo*/
 	private Modelo modelo;
-	
+
 	/* Instancia de la Vista*/
 	private View view;
-	
+
 	/**
 	 * Crear la vista y el modelo del proyecto
 	 * @param capacidad tamaNo inicial del arreglo
@@ -22,82 +23,48 @@ public class Controller {
 		view = new View();
 		modelo = new Modelo();
 	}
-		
+
 	public void run() 
 	{
 		Scanner lector = new Scanner(System.in);
 		boolean fin = false;
-		String dato = "";
-		String respuesta = "";
+		Integer dato = 0;
+		Comparendo respuesta;
 
 		while( !fin ){
 			view.printMenu();
 
 			int option = lector.nextInt();
 			switch(option){
-				case 1:
-					view.printMessage("--------- \nCrear Arreglo \nDar capacidad inicial del arreglo: ");
-				    int capacidad = lector.nextInt();
-				    modelo = new Modelo(capacidad); 
-				    view.printMessage("Arreglo Dinamico creado");
-				    view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
+			case 1:
+				modelo.cargarDatos();
+				view.printMessage("--------- \nDatos cargados");				
+				break;
 
-				case 2:
-					view.printMessage("--------- \nDar cadena (simple) a ingresar: ");
-					dato = lector.next();
-					modelo.agregar(dato);
-					view.printMessage("Dato agregado");
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
+			case 2:
+				view.printMessage("--------- \nPor favor ingresa el ObjectID del comparendo");
+				dato = lector.nextInt();
+				respuesta = modelo.buscar(dato);
+				if(respuesta !=null){
+					view.printMessage("\n dos datos son: Su objectID es  " + respuesta.darObjectId() + ", su localidad es " + respuesta.darLocalidad() +
+							"y su latitud y longitud son respectivamente " + respuesta.darLatitud() + ", " + respuesta.darLongitud());
 
-				case 3:
-					view.printMessage("--------- \nDar cadena (simple) a buscar: ");
-					dato = lector.next();
-					respuesta = modelo.buscar(dato);
-					if ( respuesta != null)
-					{
-						view.printMessage("Dato encontrado: "+ respuesta);
-					}
-					else
-					{
-						view.printMessage("Dato NO encontrado");
-					}
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
+				}
 
-				case 4:
-					view.printMessage("--------- \nDar cadena (simple) a eliminar: ");
-					dato = lector.next();
-					respuesta = modelo.eliminar(dato);
-					if ( respuesta != null)
-					{
-						view.printMessage("Dato eliminado "+ respuesta);
-					}
-					else
-					{
-						view.printMessage("Dato NO eliminado");							
-					}
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;
+				else{
+					view.printMessage("\n no se pudo encontrar el comparendo que buscabas");
+				}
 
-				case 5: 
-					view.printMessage("--------- \nContenido del Arreglo: ");
-					view.printModelo(modelo);
-					view.printMessage("Numero actual de elementos " + modelo.darTamano() + "\n---------");						
-					break;	
-					
-				case 6: 
-					view.printMessage("--------- \n Hasta pronto !! \n---------"); 
-					lector.close();
-					fin = true;
-					break;	
 
-				default: 
-					view.printMessage("--------- \n Opcion Invalida !! \n---------");
-					break;
+				break;
+
+
+
+			default: 
+				view.printMessage("--------- \n Opcion Invalida !! \n---------");
+				break;
 			}
 		}
-		
+
 	}	
 }
